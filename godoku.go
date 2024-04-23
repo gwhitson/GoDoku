@@ -1,10 +1,14 @@
 package main
 
-import(
-    "fmt"
+import (
+	"fmt"
+	"image/color"
+
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"fyne.io/fyne/v2/layout"
 )
 
 func main () {
@@ -12,12 +16,20 @@ func main () {
 	a := app.New()
 	w := a.NewWindow("Hello")
 
+    // creating ui elements
+    rect  := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 255, A: 255})
 	hello := widget.NewLabel(temp)
-	w.SetContent(container.NewVBox(
-		hello,
-	))
 
+    // adding to window
+    gridContainer := container.New(layout.NewGridLayout(2), rect, hello)
+    buttContainer := container.New(layout.NewGridLayout(9))
+    mainContainer := container.New(layout.NewGridLayout(3), gridContainer, buttContainer)
+    
+	w.SetContent(mainContainer)
+
+    // execution
 	w.ShowAndRun()
+    tidy()
 }
 
 func board() string {
@@ -39,32 +51,9 @@ func board() string {
         retval += fmt.Sprintf("%2s\n", s[i][1:])
     }
     //retval += fmt.Sprintln("%m", r)
-
     return retval;
 }
-    /*
-func main () {
-    boxs := make([]int8, 81)
-    r, c, s := make(map[int]string),make(map[int]string),make(map[int]string)
-    rows := make(map[int]int)
-    cols := make(map[int]int)
-    sqrs := make(map[int]int)
 
-    for i := range len(boxs){
-        rows[i] = i / 9
-        cols[i] = i % 9
-        sqrs[i] = ((rows[i] / 3) * 3) + (cols[i] / 3)
-
-        r[1] = "test"
-        c[1] = "test"
-        s[1] = "test"
-    }
-
-    for i := range 81 {
-        if i % 9 == 0 {
-            fmt.Println()
-        }
-        fmt.Printf("%d, ", sqrs[i])
-    }
+func tidy() {
+    fmt.Println("exited")
 }
-    */
