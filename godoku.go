@@ -2,13 +2,30 @@ package main
 
 import(
     "fmt"
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
 )
 
 func main () {
+    temp := board()
+	a := app.New()
+	w := a.NewWindow("Hello")
+
+	hello := widget.NewLabel(temp)
+	w.SetContent(container.NewVBox(
+		hello,
+	))
+
+	w.ShowAndRun()
+}
+
+func board() string {
+    var retval string = "";
     boxs := make([]int8, 81)
     r, c, s := make(map[int]string),make(map[int]string),make(map[int]string)
 
-    for i := range len(boxs){
+    for i := 0; i < len(boxs); i++ {
         row := i / 9
         col := i % 9
         sqr := (row / 3) * 3 + (col / 3)
@@ -18,10 +35,12 @@ func main () {
         s[sqr] = fmt.Sprintf("%s,%d", s[sqr], i)
     }
 
-    for i := range 9 {
-        fmt.Printf("%s\n", s[i][1:])
+    for i := 0; i < 9; i++ {
+        retval += fmt.Sprintf("%2s\n", s[i][1:])
     }
-    fmt.Println("%m", r)
+    //retval += fmt.Sprintln("%m", r)
+
+    return retval;
 }
     /*
 func main () {
