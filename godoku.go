@@ -2,17 +2,16 @@ package main
 
 import (
 	"fmt"
-	//"image/color"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/layout"
-
-    "fyne.io/fyne/v2/container"
-	/*
-		"fyne.io/fyne/v2/canvas"
-		"fyne.io/fyne/v2/layout"*/
 	"fyne.io/fyne/v2/widget"
+
+	/*
+	"fyne.io/fyne/v2/layout"
+    "fyne.io/fyne/v2/container"
+	"image/color"
+	"fyne.io/fyne/v2/canvas"
+    */
 )
 
 func main () {
@@ -21,10 +20,18 @@ func main () {
 
     // creating ui elements
 //    rect  := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 255, A: 255})
-	rows := genBoard()
-    fmt.Println(rows)
 
     // adding to window
+    puz := genPuzzle()
+    
+    w.SetContent(genBoard(puz))
+    //w.SetContent(append(w.Content(), widget.NewLabel("test")))
+    // execution
+    w.ShowAndRun()
+    tidy()
+}
+
+func genBoard (puz map[int][4]int) fyne.CanvasObject {
     board := widget.NewTable(
         // Length callback
         func() (int, int) {
@@ -41,18 +48,17 @@ func main () {
         func(i widget.TableCellID, o fyne.CanvasObject) {
             //o.(*widget.Button).SetText(fmt.Sprintf("%v", rows[(i.Row * 9) + i.Col][3]))
             //o.(*widget.Button).OnTapped = func (o fyne.CanvasObject) {fmt.Println("anotehr test")}
-            o.(*widget.Label).SetText(fmt.Sprintf("%v", rows[(i.Row * 9) + i.Col][3]))
-        })
-    mainContainer := container.New(layout.NewStackLayout(), board)
-    
-    w.SetContent(mainContainer)
+            o.(*widget.Label).SetText(fmt.Sprintf("%v", puz[(i.Row * 9) + i.Col][3]))
+        }) 
 
-    // execution
-	w.ShowAndRun()
-    tidy()
+    return board
 }
 
-func genBoard() map[int][4]int {
+func tidy() {
+    fmt.Println("exited")
+}
+
+func genPuzzle() map[int][4]int {
 
     boxs := make(map[int][4]int)
 
@@ -65,22 +71,4 @@ func genBoard() map[int][4]int {
         boxs[i] = [4]int{row,col,sqr,val}
     }
     return boxs
-
-    /*
-
-    r, c, s := make(map[int]string),make(map[int]string),make(map[int]string)
-        c[col] = fmt.Sprintf("%s,%02d", c[col], i)
-        r[row] = fmt.Sprintf("%s,%02d", r[row], i)
-        s[sqr] = fmt.Sprintf("%s,%02d", s[sqr], i)
-    }
-
-    for x := 0; x < 81; x++ {
-        retval[x] = x + 1;
-    }
-    return retval;
-    */
-}
-
-func tidy() {
-    fmt.Println("exited")
 }
