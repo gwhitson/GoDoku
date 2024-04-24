@@ -2,56 +2,83 @@ package main
 
 import (
 	"fmt"
-	"image/color"
+	//"image/color"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 	"fyne.io/fyne/v2/layout"
+
+    "fyne.io/fyne/v2/container"
+	/*
+		"fyne.io/fyne/v2/canvas"
+		"fyne.io/fyne/v2/layout"*/
+	"fyne.io/fyne/v2/widget"
 )
 
 func main () {
-    temp := board()
 	a := app.New()
 	w := a.NewWindow("Hello")
 
     // creating ui elements
-    rect  := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 255, A: 255})
-	hello := widget.NewLabel(temp)
+//    rect  := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 255, A: 255})
+	rows := genBoard()
+    fmt.Println(rows)
 
     // adding to window
-    gridContainer := container.New(layout.NewGridLayout(2), rect, hello)
-    buttContainer := container.New(layout.NewGridLayout(9))
-    mainContainer := container.New(layout.NewGridLayout(3), gridContainer, buttContainer)
+    board := widget.NewTable(
+        // Length callback
+        func() (int, int) {
+            return 9,9
+        },
+        // CreateCell callback
+        func() fyne.CanvasObject {
+            //return widget.NewButton("0", func () {
+            //    fmt.Println(" --implement")
+            //})
+            return widget.NewLabel("0")
+        },
+        // UpdateCell callback
+        func(i widget.TableCellID, o fyne.CanvasObject) {
+            //o.(*widget.Button).SetText(fmt.Sprintf("%v", rows[(i.Row * 9) + i.Col][3]))
+            //o.(*widget.Button).OnTapped = func (o fyne.CanvasObject) {fmt.Println("anotehr test")}
+            o.(*widget.Label).SetText(fmt.Sprintf("%v", rows[(i.Row * 9) + i.Col][3]))
+        })
+    mainContainer := container.New(layout.NewStackLayout(), board)
     
-	w.SetContent(mainContainer)
+    w.SetContent(mainContainer)
 
     // execution
 	w.ShowAndRun()
     tidy()
 }
 
-func board() string {
-    var retval string = "";
-    boxs := make([]int8, 81)
-    r, c, s := make(map[int]string),make(map[int]string),make(map[int]string)
+func genBoard() map[int][4]int {
 
-    for i := 0; i < len(boxs); i++ {
+    boxs := make(map[int][4]int)
+
+    for i := 0; i < 81; i++ {
         row := i / 9
         col := i % 9
         sqr := (row / 3) * 3 + (col / 3)
+        val := 0
 
-        r[row] = fmt.Sprintf("%s,%d", r[row], i)
-        c[col] = fmt.Sprintf("%s,%d", c[col], i)
-        s[sqr] = fmt.Sprintf("%s,%d", s[sqr], i)
+        boxs[i] = [4]int{row,col,sqr,val}
+    }
+    return boxs
+
+    /*
+
+    r, c, s := make(map[int]string),make(map[int]string),make(map[int]string)
+        c[col] = fmt.Sprintf("%s,%02d", c[col], i)
+        r[row] = fmt.Sprintf("%s,%02d", r[row], i)
+        s[sqr] = fmt.Sprintf("%s,%02d", s[sqr], i)
     }
 
-    for i := 0; i < 9; i++ {
-        retval += fmt.Sprintf("%2s\n", s[i][1:])
+    for x := 0; x < 81; x++ {
+        retval[x] = x + 1;
     }
-    //retval += fmt.Sprintln("%m", r)
     return retval;
+    */
 }
 
 func tidy() {
