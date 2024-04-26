@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+    "godoku/puzzle"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/widget"
@@ -18,11 +19,16 @@ func main () {
 	a := app.New()
 	w := a.NewWindow("Hello")
 
+
     // creating ui elements
 //    rect  := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 255, A: 255})
 
     // adding to window
-    puz := genPuzzle()
+    p := puzzle.Sodoku{}
+    p.GenBlank()
+    p.Print()
+    puz := puzzle.GenPuzzle()
+    puzzle.Solve(puz)
     
     w.SetContent(genBoard(puz))
     //w.SetContent(append(w.Content(), widget.NewLabel("test")))
@@ -56,19 +62,4 @@ func genBoard (puz map[int][4]int) fyne.CanvasObject {
 
 func tidy() {
     fmt.Println("exited")
-}
-
-func genPuzzle() map[int][4]int {
-
-    boxs := make(map[int][4]int)
-
-    for i := 0; i < 81; i++ {
-        row := i / 9
-        col := i % 9
-        sqr := (row / 3) * 3 + (col / 3)
-        val := 0
-
-        boxs[i] = [4]int{row,col,sqr,val}
-    }
-    return boxs
 }
