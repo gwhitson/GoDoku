@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+    "os"
     "godoku/puzzle"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -21,16 +22,35 @@ func main () {
 
 
     // creating ui elements
-//    rect  := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 255, A: 255})
+    // rect  := canvas.NewRectangle(color.NRGBA{R: 0, G: 0, B: 255, A: 255})
 
     // adding to window
-    p := puzzle.Sodoku{}
-    p.GenBlank()
+    p := puzzle.New()
+    //p.GenBlank()
     p.Print()
+    
+    // Super crude way to gen puzzle by a file
+    dat,err := os.ReadFile("puzzle.txt")
+    if err != nil {
+        panic(err)
+    }
+    
+    var t [81]int
+    //var s = t[:]
+
+    for i := 0; i < 81; i++ {
+        t[i] = int(dat[i * 2]) - 48
+        //s = append(s, int(dat[i * 2]) - 48)
+    }
+
+    fmt.Printf("%v\n", t)
+
+    p.SetPuzzle(&t)
+
     puz := puzzle.GenPuzzle()
     puzzle.Solve(puz)
     
-    w.SetContent(genBoard(puz))
+    w.SetContent(genBoard(p.GetBoard()))
     //w.SetContent(append(w.Content(), widget.NewLabel("test")))
     // execution
     w.ShowAndRun()
