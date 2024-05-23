@@ -5,7 +5,7 @@ import (
 )
 
 type Sodoku struct {
-    board map[int][4]int
+    Board map[int][4]int
 }
 
 func New () Sodoku {
@@ -22,7 +22,7 @@ func New () Sodoku {
 }
 
 func (s Sodoku) GetBoard () map[int][4]int {
-    return s.board
+    return s.Board
 }
 
 func (s Sodoku) SetPuzzle (a *[81]int) Sodoku {
@@ -30,7 +30,7 @@ func (s Sodoku) SetPuzzle (a *[81]int) Sodoku {
         row := i / 9
         col := i % 9
         sqr := (row / 3) * 3 + (col / 3)
-        s.board[i] = [4]int{row, col, sqr, a[i]}
+        s.Board[i] = [4]int{row, col, sqr, a[i]}
         //fmt.Printf("%v\n", [4]int{row, col, sqr, a[i]})
     }
 
@@ -39,7 +39,7 @@ func (s Sodoku) SetPuzzle (a *[81]int) Sodoku {
 
 func (s Sodoku) Print () {
     for i := 0; i < 81; i++ {
-        fmt.Printf("%v", s.board[i][3])
+        fmt.Printf("%v", s.Board[i][3])
         if i % 9 == 8 {
             fmt.Println()
         }
